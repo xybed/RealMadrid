@@ -7,6 +7,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +18,11 @@ import java.util.Map;
 public class BaseController {
     private static final String TOKEN_KEY = "HalaMadrid";
 
-    protected void generateToken(HttpSession session, String username){
+    protected String generateToken(HttpSession session, String username){
         String token = MD5Util.MD5(username + System.currentTimeMillis());
-        session.setAttribute("token", token);
+        session.setAttribute(username, token);
         session.setMaxInactiveInterval(60*60*24);
+        return token;
     }
 
     /**
@@ -54,12 +56,21 @@ public class BaseController {
     protected boolean validateToken(HttpSession session, String token){
         if(StringUtil.isEmpty(token))
             return false;
-        return token.equals(session.getAttribute("token"));
+        boolean isExist = false;
+        Enumeration enumeration = session.getAttributeNames();
+        while (enumeration.hasMoreElements()){
+            String sessionName = (String) enumeration.nextElement();
+            if(token.equals(session.getAttribute(sessionName))){
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
     }
 
     protected String getApplicationPath(){
         WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
         ServletContext servletContext = webApplicationContext.getServletContext();
-        return  servletContext.getRealPath("/");
+        return servletContext.getRealPath("/");
     }
 }

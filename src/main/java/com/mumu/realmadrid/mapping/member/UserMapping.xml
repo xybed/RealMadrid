@@ -5,4 +5,19 @@
     <select id="getUserById" parameterType="java.lang.String" resultType="com.mumu.realmadrid.pojo.member.User">
         SELECT * FROM user WHERE id= #{id}
     </select>
+    <select id="validateRegisteredByUsername" parameterType="java.lang.String" resultType="boolean">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+    <insert id="register" parameterType="com.mumu.realmadrid.pojo.member.User">
+        INSERT INTO
+        user(username, password, nickname, telephone,
+        sex, register_day, verify_code, avatar)
+        VALUES (#{username}, #{password}, #{username}, #{username},
+        1, #{registerDay}, #{verifyCode}, #{avatar})
+    </insert>
+    <select id="getUserByUsername" parameterType="java.lang.String" resultType="com.mumu.realmadrid.model.member.UserModel">
+        SELECT id, username, nickname, telephone, sex, realname, birthday, email, city, avatar
+        FROM user
+        WHERE username = #{username}
+    </select>
 </mapper>

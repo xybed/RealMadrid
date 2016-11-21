@@ -1,5 +1,7 @@
 package com.mumu.realmadrid.service.member;
 
+import com.mumu.realmadrid.exception.RegisteredException;
+import com.mumu.realmadrid.model.member.UserModel;
 import com.mumu.realmadrid.pojo.member.User;
 
 /**
@@ -7,4 +9,5 @@ import com.mumu.realmadrid.pojo.member.User;
  */
 public interface IUserService {
     User getUserById(String userId);
+    UserModel register(String username, String password, String verifyCode) throws RegisteredException;
 }
